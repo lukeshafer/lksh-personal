@@ -1,44 +1,53 @@
 ---
-import InteractiveSun from "@c/InteractiveSun.astro";
-import Hills from "./Hills.astro";
+import InteractiveSun from '@c/InteractiveSun.astro';
+import Hills from './Hills.astro';
 ---
 
 <div class="container">
 	<div class="sun-container">
-		<h1 class="title">Luke Shafer</h1>
+		<h1 class="title">Hi, I'm Luke</h1>
 		<InteractiveSun>
 			<div class="sun"></div>
 		</InteractiveSun>
 	</div>
 	<Hills />
+	<a class="next-section-link" href="#">psst, there's more down here ↓</a>
 </div>
 
 <style>
 	:root {
 		--sun-color-light: var(--yellow-8);
+		--sun-stroke-light: var(--yellow-6);
 		--sky-color-light: var(--brown-0);
 		--shadow-color-light: rgba(0, 0, 0, 0.3);
+		--title-color-light: var(--pink-11);
 
-		--sun-color-dark: var(--red-9);
-		--sky-color-dark: var(--gradient-23);
+		--sun-color-dark: var(--sand-0);
+		--sun-stroke-dark: var(--sand-2);
+		--sky-color-dark: var(--sand-11);
 		--shadow-color-dark: rgba(255, 255, 255, 0.3);
+		--title-color-dark: var(--violet-2);
 
 		--sun-color: var(--sun-color-light);
+		--sun-stroke: var(--sun-stroke-light);
 		--hills-stroke: var(--hills-stroke-light);
 		--sky-color: var(--sky-color-light);
 		--sky-color-inverse: var(--sky-color-dark);
 		--shadow-color: var(--shadow-color-light);
 		--shadow-color-inverse: var(--shadow-color-dark);
+		--title-color: var(--title-color-light);
 
 		--landscape-shadow: 2px 2px 5px var(--shadow-color);
 		--landscape-shadow-inverse: 2px 2px 5px var(--shadow-color-inverse);
 
 		& body.dark {
 			--sun-color: var(--sun-color-dark);
+			--sun-stroke: var(--sun-stroke-dark);
 			--sky-color: var(--sky-color-dark);
 			--sky-color-inverse: var(--sky-color-light);
 			--shadow-color: var(--shadow-color-dark);
 			--shadow-color-inverse: var(--shadow-color-light);
+			--title-color: var(--title-color-dark);
 		}
 	}
 
@@ -62,8 +71,8 @@ import Hills from "./Hills.astro";
 
 		& .sun-container {
 			opacity: 0;
-			animation: rise 2s var(--ease-in-out-3) forwards,
-				var(--hide-before-animation), temp-overflow-hidden 4s forwards;
+			animation: rise 2s var(--ease-in-out-3) forwards, var(--hide-before-animation),
+				temp-overflow-hidden 4s forwards;
 			animation-delay: 0s, 0s, 1.5s;
 		}
 
@@ -118,25 +127,29 @@ import Hills from "./Hills.astro";
 			width: max-content;
 			white-space: nowrap;
 
-			color: var(--pink-11);
+			color: var(--title-color);
 
-			font-family: Nunito, cursive;
+			font-family: 'Montserrat', cursive;
 			font-weight: 700;
 		}
 	}
 
-	.gradient-text {
-		z-index: -1 !important;
-		--gradient-text-light: var(--gradient-1);
-		--gradient-text-dark: var(--gradient-25);
-
-		--gradient-text: var(--gradient-text-light);
-		@media (prefers-color-scheme: dark) {
-			--gradient-text: var(--gradient-text-dark);
-		}
-
-		background: var(--gradient-text);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
+	.next-section-link {
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 0.5rem 1rem;
+		margin-bottom: 1rem;
+		border-radius: 1rem;
+		background: var(--pink-11);
+		color: var(--gray-0);
+		text-decoration: none;
+		font-family: 'Montserrat', cursive;
+		font-weight: 700;
+		opacity: 0;
+		animation: var(--animation-fade-in) forwards;
+		animation-duration: 1s;
+		animation-delay: 4s;
 	}
 </style>

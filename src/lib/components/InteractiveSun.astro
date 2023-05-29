@@ -14,13 +14,15 @@
 
 		const xPercent = (clientX - x) / width - 0.5;
 		const yPercent = (clientY - y) / height - 0.5;
+		const absX = Math.abs(xPercent);
+		const absY = Math.abs(yPercent);
 
-		const isMouseClose = Math.abs(xPercent) < 2 && Math.abs(yPercent) < 2;
+		const isMouseClose = absX < 2 && absY < 2;
 
 		if (!isSunMoving && !isMouseClose) return;
 
-		const newX = xPercent * 5;
-		const newY = yPercent * 5;
+		const newX = absX < 1 ? xPercent * 10 : (Math.sign(xPercent) * 2 - xPercent) * 10;
+		const newY = absY < 1 ? yPercent * 10 : (Math.sign(yPercent) * 2 - yPercent) * 10;
 
 		if (!isSunMoving) {
 			isSunMoving = true;
@@ -34,8 +36,8 @@
 			return;
 		}
 
-		el.style.setProperty("--x", xPercent * 10 + "%");
-		el.style.setProperty("--y", yPercent * 10 + "%");
+		el.style.setProperty('--x', newX + '%');
+		el.style.setProperty('--y', newY + '%');
 	}
 
 	/**
@@ -45,22 +47,18 @@
 	 */
 	function moveSunTo(el, x, y) {
 		isSunAnimating = true;
-		el.style.setProperty("transition", "translate 0.1s linear");
-		el.style.setProperty("--x", x + "%");
-		el.style.setProperty("--y", y + "%");
+		el.style.setProperty('transition', 'translate 0.1s linear');
+		el.style.setProperty('--x', x + '%');
+		el.style.setProperty('--y', y + '%');
 
 		setTimeout(() => {
 			isSunAnimating = false;
-			el.style.setProperty("transition", "");
+			el.style.setProperty('transition', '');
 		}, 100);
 	}
 </script>
 
-<button
-	class="sun-wrapper"
-	@mousemove.window="moveSun($el, $event)"
-	@click="dark = !dark"
->
+<button class="sun-wrapper" @mousemove.window="moveSun($el, $event)" @click="dark = !dark">
 	<slot />
 </button>
 
@@ -80,5 +78,19 @@
 		border: none;
 
 		background-position: 100% 0;
+
+		transition: scale 150ms var(--ease-out-1), border-width 100ms var(--ease-out-1);
+		border-color: var(--sun-stroke);
+		border-style: solid;
+		border-width: 0px;
+	}
+
+	.sun-wrapper:hover {
+		scale: 1.05;
+		border-width: 0.5rem;
+	}
+
+	.sun-wrapper:focus {
+		outline: 4px solid var(--sun-stroke);
 	}
 </style>
