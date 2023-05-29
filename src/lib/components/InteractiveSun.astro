@@ -1,0 +1,84 @@
+<script is:inline>
+	let isSunMoving = false;
+	let isSunAnimating = false;
+
+	/**
+	 * @param {HTMLElement} el
+	 * @param {MouseEvent} e
+	 */
+	function moveSun(el, e) {
+		if (isSunAnimating) return;
+
+		const { width, height, x, y } = el.getBoundingClientRect();
+		const { clientX, clientY } = e;
+
+		const xPercent = (clientX - x) / width - 0.5;
+		const yPercent = (clientY - y) / height - 0.5;
+
+		const isMouseClose = Math.abs(xPercent) < 2 && Math.abs(yPercent) < 2;
+
+		if (!isSunMoving && !isMouseClose) return;
+
+		const newX = xPercent * 5;
+		const newY = yPercent * 5;
+
+		if (!isSunMoving) {
+			isSunMoving = true;
+			moveSunTo(el, newX, newY);
+			return;
+		}
+
+		if (!isMouseClose) {
+			isSunMoving = false;
+			moveSunTo(el, 0, 0);
+			return;
+		}
+
+		el.style.setProperty("--x", xPercent * 10 + "%");
+		el.style.setProperty("--y", yPercent * 10 + "%");
+	}
+
+	/**
+	 * @param {HTMLElement} el
+	 * @param {number} x
+	 * @param {number} y
+	 */
+	function moveSunTo(el, x, y) {
+		isSunAnimating = true;
+		el.style.setProperty("transition", "translate 0.1s linear");
+		el.style.setProperty("--x", x + "%");
+		el.style.setProperty("--y", y + "%");
+
+		setTimeout(() => {
+			isSunAnimating = false;
+			el.style.setProperty("transition", "");
+		}, 100);
+	}
+</script>
+
+<button
+	class="sun-wrapper"
+	@mousemove.window="moveSun($el, $event)"
+	@click="dark = !dark"
+>
+	<slot />
+</button>
+
+<style>
+	.sun-wrapper {
+		--x: 0;
+		--y: 0;
+
+		translate: var(--x) var(--y);
+
+		--size: max(100px, 13vw);
+		height: var(--size);
+		width: var(--size);
+		border-radius: 50%;
+		background: var(--sun-color);
+		background-size: cover;
+		border: none;
+
+		background-position: 100% 0;
+	}
+</style>

@@ -1,12 +1,27 @@
 ---
+import { j } from "@/lib/utils"
 import Head from "./Head.astro";
 import "open-props/normalize.min.css";
 import "open-props/buttons.min.css";
+
+const dark = Astro.cookies.get("dark").value === "true";
+console.log("dark", dark);
 ---
 
 <html lang="en">
 	<Head />
-	<body>
+	<body
+		x-data={ j({ dark }) }
+		:class="dark ? 'dark' : ''"
+		x-effect="setDarkMode(dark)"
+	>
 		<slot />
 	</body>
 </html>
+
+<script is:inline>
+	/** @param {boolean} value */
+	function setDarkMode(value) {
+		document.cookie = "dark=" + (value ? "true" : "false");
+	}
+</script>
